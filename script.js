@@ -14,6 +14,28 @@ let totalReps = Number(localStorage.getItem('savedReps')) || 0;
 let dailyGoal = Number(localStorage.getItem('dailyGoal')) || 50;
 let history = JSON.parse(localStorage.getItem('repHistory')) || [];
 
+const themeToggle = document.getElementById('theme-toggle');
+
+// 1. Function to apply theme
+function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+    themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+}
+
+// 2. Load saved theme or system preference
+const savedTheme = localStorage.getItem('theme') || 
+    (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
+applyTheme(savedTheme);
+
+// 3. Toggle event
+themeToggle.addEventListener('click', () => {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    applyTheme(newTheme);
+});
+
 // Initial Load
 updateUI();
 
