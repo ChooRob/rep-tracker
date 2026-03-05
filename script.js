@@ -17,12 +17,27 @@ let history = JSON.parse(localStorage.getItem('repHistory')) || [];
 const themeToggle = document.getElementById('theme-toggle');
 
 function applyTheme(theme) {
-    // Applying to both body and documentElement for Safari compatibility
     document.documentElement.setAttribute('data-theme', theme);
     document.body.setAttribute('data-theme', theme); 
-    
     localStorage.setItem('theme', theme);
-    themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+    document.getElementById('theme-toggle').textContent = theme === 'light' ? '🌙' : '☀️';
+}
+
+// Share Logic
+document.getElementById('share-btn').addEventListener('click', () => {
+    const text = `🔥 Just crushed ${totalReps} reps! My daily goal: ${dailyGoal}.`;
+    if (navigator.share) {
+        navigator.share({ title: 'Workout Update', text: text });
+    } else {
+        alert(text);
+    }
+});
+
+// Sound Logic (Make sure to wrap in user interaction)
+function playSound() {
+    const successSound = document.getElementById('success-sound');
+    successSound.currentTime = 0;
+    successSound.play().catch(e => console.log("Audio blocked until user interaction"));
 }
 
 // Check for saved preference
