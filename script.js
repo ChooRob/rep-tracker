@@ -1,4 +1,4 @@
-// Elements
+// 1. DOM Elements
 const repCountDisplay = document.getElementById('rep-count');
 const repInput = document.getElementById('rep-input');
 const addBtn = document.getElementById('add-btn');
@@ -11,82 +11,113 @@ const themeToggle = document.getElementById('theme-toggle');
 const shareBtn = document.getElementById('share-btn');
 const successSound = document.getElementById('success-sound');
 
-// State
+// 2. State Management (Load from Storage)
 let totalReps = Number(localStorage.getItem('savedReps')) || 0;
 let dailyGoal = Number(localStorage.getItem('dailyGoal')) || 50;
 let history = JSON.parse(localStorage.getItem('repHistory')) || [];
 
-// Initialize
-updateUI();
-initTheme();
-
-function updateUI() {
-    repCountDisplay.textContent = totalReps;
-    goalDisplay.textContent = dailyGoal;
-
-    // Progress Calculation
-    let pct = Math.min((totalReps / dailyGoal) * 100, 100);
-    progressBar.style.width = pct + "%";
-    progressBar.style.background = totalReps >= dailyGoal ? "#FFD700" : "linear-gradient(90deg, #4cd964, #28cd41)";
-
-    // History Rendering
-    historyList.innerHTML = '';
-    history.slice().reverse().forEach(item => {
-        const li = document.createElement('li');
-        li.className = 'history-item';
-        li.innerHTML = `<span><strong>+${item.amount}</strong></span> <span style="color:var(--text-sub)">${item.time}</span>`;
-        historyList.appendChild(li);
-    });
-}
-
-// Logic
-addBtn.addEventListener('click', () => {
-    const val = parseInt(repInput.value);
-    if (val > 0) {
-        successSound.currentTime = 0;
-        successSound.play().catch(() => {}); // Catch browser block
-        
-        totalReps += val;
-        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        history.push({ amount: val, time: time });
-
-        localStorage.setItem('savedReps', totalReps);
-        localStorage.setItem('repHistory', JSON.stringify(history));
-        
-        updateUI();
-        repInput.value = '';
-    }
-});
-
-// Theme Logic
-function initTheme() {
-    const saved = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-    setTheme(saved);
-}
-
-function setTheme(theme) {
+// 3. Theme Initialization & Logic
+function applyTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
     themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
 }
 
+const savedTheme = localStorage.getItem('theme') || 
+    (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+applyTheme(savedTheme);
+
 themeToggle.addEventListener('click', () => {
-    const current = document.documentElement.getAttribute('data-theme');
-    setTheme(current === 'light' ? 'dark' : 'light');
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    applyTheme(currentTheme === 'light' ? 'dark' : 'light');
 });
 
-// Extras
+// 4. Core UI Updater Function
+function updateUI() {
+    // Update text
+    repCountDisplay.textContent = totalReps;
+    goalDisplay.textContent = dailyGoal;
+
+    // Update progress bar
+    let percentage = (totalReps / dailyGoal) * 100;
+    if (percentage > 100) percentage = 100;
+    progressBar.style.width = percentage + "%";
+    
+    if (totalReps >= dailyGoal) {
+        progressBar.style.background = "#FFD700"; // Gold when goal hit
+    } else {
+        progressBar.style.background = "linear-gradient(90deg, #4cd964, #28cd41)";
+    }
+
+    // Render history
+    historyList.innerHTML = '';
+    history.slice().reverse().forEach(item => {
+        const li = document.createElement('li');
+        li.className = 'history-item';
+        li.innerHTML = `
+            <span><strong>+${item.amount}</strong> reps</span>
+            <span class="history-time">${item.time}</span>
+        `;
+        historyList.appendChild(li);
+    });
+}
+
+// Initial UI render on load
+updateUI();
+
+// 5. App Interactions
+addBtn.addEventListener('click', () => {
+    const value = parseInt(repInput.value);
+    
+    if (!isNaN(value) && value > 0) {
+        // Play sound
+        successSound.currentTime = 0;
+        successSound.play().catch(e => console.log("Sound ready on next click"));
+
+        // Update Data
+        totalReps += value;
+        const timeString = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        history.push({ amount: value, time: timeString });
+
+        // Save Data
+        localStorage.setItem('savedReps', totalReps);
+        localStorage.setItem('repHistory', JSON.stringify(history));
+        
+        // Refresh UI
+        updateUI();
+        repInput.value = '';
+        repInput.focus();
+    }
+});
+
 setGoalBtn.addEventListener('click', () => {
-    const n = prompt("New daily goal:", dailyGoal);
-    if (n > 0) { dailyGoal = parseInt(n); localStorage.setItem('dailyGoal', dailyGoal); updateUI(); }
+    const newGoal = prompt("What is your new daily goal?", dailyGoal);
+    if (newGoal && !isNaN(newGoal) && newGoal > 0) {
+        dailyGoal = parseInt(newGoal);
+        localStorage.setItem('dailyGoal', dailyGoal);
+        updateUI();
+    }
 });
 
 shareBtn.addEventListener('click', () => {
-    const msg = `🔥 Just hit ${totalReps} reps! Current goal: ${dailyGoal}. Tracker by Gemini.`;
-    if (navigator.share) navigator.share({ title: 'Workout', text: msg });
-    else alert(msg);
+    const text = `🔥 I just crushed ${totalReps} reps! My daily goal is ${dailyGoal}.`;
+    if (navigator.share) {
+        navigator.share({
+            title: 'My Workout Progress',
+            text: text,
+            url: window.location.href
+        });
+    } else {
+        alert(text); // Fallback if browser doesn't support sharing
+    }
 });
 
 resetBtn.addEventListener('click', () => {
-    if(confirm("Wipe all data?")) { localStorage.clear(); location.reload(); }
+    if(confirm("This will permanently delete your session history. Are you sure?")) {
+        totalReps = 0;
+        history = [];
+        localStorage.removeItem('savedReps');
+        localStorage.removeItem('repHistory');
+        updateUI();
+    }
 });
