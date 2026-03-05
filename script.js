@@ -1,4 +1,4 @@
-// DOM Elements
+// Elements
 const repCountDisplay = document.getElementById('rep-count');
 const repInput = document.getElementById('rep-input');
 const addBtn = document.getElementById('add-btn');
@@ -7,117 +7,86 @@ const historyList = document.getElementById('history-list');
 const progressBar = document.getElementById('progress-bar');
 const goalDisplay = document.getElementById('current-goal-display');
 const setGoalBtn = document.getElementById('set-goal-btn');
+const themeToggle = document.getElementById('theme-toggle');
+const shareBtn = document.getElementById('share-btn');
 const successSound = document.getElementById('success-sound');
 
-// Data State
+// State
 let totalReps = Number(localStorage.getItem('savedReps')) || 0;
 let dailyGoal = Number(localStorage.getItem('dailyGoal')) || 50;
 let history = JSON.parse(localStorage.getItem('repHistory')) || [];
 
-const themeToggle = document.getElementById('theme-toggle');
-
-function applyTheme(theme) {
-    document.documentElement.setAttribute('data-theme', theme);
-    document.body.setAttribute('data-theme', theme); 
-    localStorage.setItem('theme', theme);
-    document.getElementById('theme-toggle').textContent = theme === 'light' ? '🌙' : '☀️';
-}
-
-// Share Logic
-document.getElementById('share-btn').addEventListener('click', () => {
-    const text = `🔥 Just crushed ${totalReps} reps! My daily goal: ${dailyGoal}.`;
-    if (navigator.share) {
-        navigator.share({ title: 'Workout Update', text: text });
-    } else {
-        alert(text);
-    }
-});
-
-// Sound Logic (Make sure to wrap in user interaction)
-function playSound() {
-    const successSound = document.getElementById('success-sound');
-    successSound.currentTime = 0;
-    successSound.play().catch(e => console.log("Audio blocked until user interaction"));
-}
-
-// Check for saved preference
-const savedTheme = localStorage.getItem('theme') || 
-    (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-
-// Apply immediately
-applyTheme(savedTheme);
-
-themeToggle.addEventListener('click', () => {
-    const currentTheme = document.documentElement.getAttribute('data-theme');
-    applyTheme(currentTheme === 'light' ? 'dark' : 'light');
-});
-
-// Initial Load
+// Initialize
 updateUI();
+initTheme();
 
 function updateUI() {
-    // 1. Update Text
     repCountDisplay.textContent = totalReps;
     goalDisplay.textContent = dailyGoal;
 
-    // 2. Update Progress Bar
-    let percentage = (totalReps / dailyGoal) * 100;
-    if (percentage > 100) percentage = 100;
-    progressBar.style.width = percentage + "%";
-    
-    // Change color if goal reached
-    progressBar.style.background = totalReps >= dailyGoal 
-        ? "#FFD700" 
-        : "linear-gradient(90deg, #4cd964, #28cd41)";
+    // Progress Calculation
+    let pct = Math.min((totalReps / dailyGoal) * 100, 100);
+    progressBar.style.width = pct + "%";
+    progressBar.style.background = totalReps >= dailyGoal ? "#FFD700" : "linear-gradient(90deg, #4cd964, #28cd41)";
 
-    // 3. Render History
+    // History Rendering
     historyList.innerHTML = '';
     history.slice().reverse().forEach(item => {
         const li = document.createElement('li');
         li.className = 'history-item';
-        li.innerHTML = `<span><strong>+${item.amount}</strong> reps</span><span style="color:#999">${item.time}</span>`;
+        li.innerHTML = `<span><strong>+${item.amount}</strong></span> <span style="color:var(--text-sub)">${item.time}</span>`;
         historyList.appendChild(li);
     });
 }
 
+// Logic
 addBtn.addEventListener('click', () => {
-    const value = parseInt(repInput.value);
-    
-    if (!isNaN(value) && value > 0) {
-        // Play sound
-        successSound.currentTime = 0; // Reset sound if clicked rapidly
-        successSound.play();
+    const val = parseInt(repInput.value);
+    if (val > 0) {
+        successSound.currentTime = 0;
+        successSound.play().catch(() => {}); // Catch browser block
+        
+        totalReps += val;
+        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        history.push({ amount: val, time: time });
 
-        // Update Data
-        totalReps += value;
-        const now = new Date();
-        const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        history.push({ amount: value, time: timeStr });
-
-        // Save
         localStorage.setItem('savedReps', totalReps);
         localStorage.setItem('repHistory', JSON.stringify(history));
         
         updateUI();
         repInput.value = '';
-        repInput.focus();
     }
 });
 
+// Theme Logic
+function initTheme() {
+    const saved = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    setTheme(saved);
+}
+
+function setTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+    themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+}
+
+themeToggle.addEventListener('click', () => {
+    const current = document.documentElement.getAttribute('data-theme');
+    setTheme(current === 'light' ? 'dark' : 'light');
+});
+
+// Extras
 setGoalBtn.addEventListener('click', () => {
-    const newGoal = prompt("Set a new daily goal:", dailyGoal);
-    if (newGoal && !isNaN(newGoal) && newGoal > 0) {
-        dailyGoal = parseInt(newGoal);
-        localStorage.setItem('dailyGoal', dailyGoal);
-        updateUI();
-    }
+    const n = prompt("New daily goal:", dailyGoal);
+    if (n > 0) { dailyGoal = parseInt(n); localStorage.setItem('dailyGoal', dailyGoal); updateUI(); }
+});
+
+shareBtn.addEventListener('click', () => {
+    const msg = `🔥 Just hit ${totalReps} reps! Current goal: ${dailyGoal}. Tracker by Gemini.`;
+    if (navigator.share) navigator.share({ title: 'Workout', text: msg });
+    else alert(msg);
 });
 
 resetBtn.addEventListener('click', () => {
-    if(confirm("Clear all session data and history?")) {
-        totalReps = 0;
-        history = [];
-        localStorage.clear(); // Clears everything
-        updateUI();
-    }
+    if(confirm("Wipe all data?")) { localStorage.clear(); location.reload(); }
 });

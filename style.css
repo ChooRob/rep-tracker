@@ -1,10 +1,10 @@
-/* Update the top of your style.css */
 :root {
     --bg-color: #f0f2f5;
     --card-bg: #ffffff;
     --text-main: #1c1c1e;
     --text-sub: #666666;
     --border-color: #efefef;
+    --input-bg: #ffffff;
 }
 
 [data-theme="dark"] {
@@ -13,177 +13,107 @@
     --text-main: #ffffff;
     --text-sub: #b0b0b0;
     --border-color: #333333;
-}
-
-body {
-    background-color: var(--bg-color);
-    transition: background-color 0.3s ease;
-}
-
-.container {
-    background: var(--card-bg);
-    color: var(--text-main);
-}
-
-/* Update your existing styles to use these variables */
-h1 { color: var(--text-main); }
-.goal-row, .history-time { color: var(--text-sub); }
-input { 
-    background: var(--card-bg); 
-    color: var(--text-main); 
-    border-color: var(--border-color); 
-}
-.history-item { border-bottom-color: var(--border-color); }
-
-/* Theme Toggle Button Style */
-.top-controls { text-align: right; }
-#theme-toggle {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    padding: 0;
-    cursor: pointer;
+    --input-bg: #2c2c2e;
 }
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     display: flex;
     justify-content: center;
-    background-color: #f0f2f5;
+    background-color: var(--bg-color);
     margin: 0;
     padding: 20px;
+    transition: background-color 0.3s ease;
 }
 
 .container {
-    background: white;
-    padding: 2rem;
-    border-radius: 25px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    background: var(--card-bg);
+    color: var(--text-main);
+    padding: 1.5rem;
+    border-radius: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
     width: 100%;
     max-width: 400px;
     text-align: center;
 }
 
-h1 { color: #1c1c1e; margin-bottom: 0.5rem; }
+/* Header & Controls */
+.top-controls { display: flex; justify-content: space-between; margin-bottom: 10px; }
+.icon-btn { background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--text-main); }
 
+h1 { font-size: 1.5rem; margin: 0; }
+
+/* Display */
 .counter-display #rep-count {
-    font-size: 5rem;
+    font-size: 5.5rem;
     font-weight: 800;
     color: #007AFF;
     display: block;
+    line-height: 1;
+    margin: 20px 0;
 }
 
-.goal-container { margin: 20px 0; }
-
+/* Progress Bar */
 .progress-track {
     width: 100%;
-    height: 12px;
-    background-color: #eee;
+    height: 10px;
+    background-color: var(--border-color);
     border-radius: 10px;
     overflow: hidden;
     margin-bottom: 8px;
 }
-
 #progress-bar {
     width: 0%;
     height: 100%;
     background: linear-gradient(90deg, #4cd964, #28cd41);
-    transition: width 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: width 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.2);
 }
+.goal-row { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-sub); }
 
-.goal-row {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.9rem;
-    color: #666;
-}
+/* Inputs & Buttons */
+.input-group { display: flex; flex-direction: column; gap: 12px; margin: 25px 0; }
 
-.input-group {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-bottom: 20px;
-}
-
-/* Custom iOS-style Button */
-#add-btn {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 100%;
-    padding: 16px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    border-radius: 14px; /* iOS uses slightly more rounded corners */
-    background: #007AFF; /* Classic iOS Blue */
-    color: white;
-    border: none;
-    cursor: pointer;
-    transition: transform 0.1s ease, background-color 0.2s ease;
-    box-shadow: 0 4px 6px rgba(0, 122, 255, 0.15); /* Soft glow */
-}
-
-/* Tappable feedback - mimics the iOS "press" feel */
-#add-btn:active {
-    transform: scale(0.97);
-    background-color: #005ecb;
-}
-
-/* iOS-style Input */
 input {
     -webkit-appearance: none;
-    appearance: none;
     width: 100%;
     box-sizing: border-box;
     padding: 16px;
     font-size: 1.1rem;
     background-color: var(--input-bg);
     color: var(--text-main);
-    border: 1px solid var(--border-color); /* Thinner borders for a cleaner look */
+    border: 1px solid var(--border-color);
     border-radius: 14px;
-    margin-bottom: 5px;
-    transition: border-color 0.2s ease;
 }
 
-input:focus {
-    outline: none;
-    border-color: #007AFF;
-}
-
-/* Reset button - minimalist iOS style */
-#reset-btn {
+#add-btn {
     -webkit-appearance: none;
-    background: none;
-    color: #ff3b30;
-    font-size: 0.9rem;
-    font-weight: 500;
-    margin-top: 20px;
-    opacity: 0.8;
+    background-color: #007AFF;
+    color: white;
+    padding: 16px;
+    border-radius: 14px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: none;
+    transition: transform 0.1s ease;
 }
 
-.small-link {
-    background: none;
-    color: #007AFF;
-    padding: 0;
-    text-decoration: underline;
-    font-weight: 400;
-}
+#add-btn:active { transform: scale(0.96); opacity: 0.9; }
 
+/* History Section */
 .history-section {
-    margin-top: 30px;
+    margin-top: 20px;
     text-align: left;
-    border-top: 1px solid #eee;
+    border-top: 1px solid var(--border-color);
+}
+#history-list { list-style: none; padding: 0; max-height: 120px; overflow-y: auto; }
+.history-item { 
+    display: flex; 
+    justify-content: space-between; 
+    padding: 10px 0; 
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.9rem;
 }
 
-#history-list {
-    list-style: none;
-    padding: 0;
-    max-height: 150px;
-    overflow-y: auto;
-}
-
-.history-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 12px 0;
-    border-bottom: 1px solid #f9f9f9;
-}
+/* Utilities */
+.small-link { background: none; color: #007AFF; border: none; font-size: 0.85rem; text-decoration: underline; padding: 0; }
+#reset-btn { background: none; border: none; color: #ff3b30; margin-top: 20px; font-size: 0.8rem; opacity: 0.6; width: 100%; }
