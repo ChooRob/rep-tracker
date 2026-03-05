@@ -16,24 +16,25 @@ let history = JSON.parse(localStorage.getItem('repHistory')) || [];
 
 const themeToggle = document.getElementById('theme-toggle');
 
-// 1. Function to apply theme
 function applyTheme(theme) {
+    // Applying to both body and documentElement for Safari compatibility
     document.documentElement.setAttribute('data-theme', theme);
+    document.body.setAttribute('data-theme', theme); 
+    
     localStorage.setItem('theme', theme);
     themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
 }
 
-// 2. Load saved theme or system preference
+// Check for saved preference
 const savedTheme = localStorage.getItem('theme') || 
     (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 
+// Apply immediately
 applyTheme(savedTheme);
 
-// 3. Toggle event
 themeToggle.addEventListener('click', () => {
     const currentTheme = document.documentElement.getAttribute('data-theme');
-    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-    applyTheme(newTheme);
+    applyTheme(currentTheme === 'light' ? 'dark' : 'light');
 });
 
 // Initial Load

@@ -16,19 +16,21 @@
     --input-bg: #2c2c2e;
 }
 
+/* Base Styles */
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     display: flex;
     justify-content: center;
-    background-color: var(--bg-color); /* Updated */
+    background-color: var(--bg-color);
     margin: 0;
     padding: 20px;
     transition: background-color 0.3s ease;
+    -webkit-font-smoothing: antialiased; /* Better text on Safari */
 }
 
 .container {
-    background: var(--card-bg); /* Updated */
-    color: var(--text-main);    /* Updated */
+    background: var(--card-bg);
+    color: var(--text-main);
     padding: 2rem;
     border-radius: 25px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
@@ -38,53 +40,37 @@ body {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-h1 { 
-    color: var(--text-main); /* Forces title to change color */
-    margin-top: 10px;
+/* BUTTON RESET (The Safari Fix) */
+button {
+    -webkit-appearance: none; /* Removes Safari default look */
+    appearance: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
 }
 
-.counter-display #rep-count {
-    font-size: 5rem;
-    font-weight: 800;
-    color: #007AFF; /* Stays blue in both modes for branding */
-    display: block;
+/* Primary Button Styling */
+#add-btn {
+    width: 100%;
+    padding: 16px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 12px;
+    background-color: #007AFF;
+    color: white;
 }
 
-/* Input Fields */
+/* Input Styling */
 input {
+    -webkit-appearance: none; /* Removes Safari shadow */
+    width: 100%;
+    box-sizing: border-box; /* Prevents input from overflowing */
     padding: 16px;
     font-size: 1.2rem;
     background-color: var(--input-bg);
     color: var(--text-main);
     border: 2px solid var(--border-color);
     border-radius: 12px;
-    outline: none;
 }
 
-/* History Items */
-.history-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 12px 0;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.history-time {
-    color: var(--text-sub);
-}
-
-/* Theme Toggle Position */
-.top-controls {
-    display: flex;
-    justify-content: flex-end;
-}
-
-#theme-toggle {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    padding: 5px;
-}
-
-/* Keep the rest of your button and progress bar styles below... */
+/* Rest of your existing Progress Bar and History styles... */
