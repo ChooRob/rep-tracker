@@ -313,7 +313,7 @@ nextMonthBtn.addEventListener('click', () => {
 
 
 // 7. Circular Slider Logic
-const slider = { center: 60, radius: 54, isDragging: false, startAngle: 0, currentAngle: 0, repsPerRotation: 20 };
+const slider = { center: 60, radius: 54, isDragging: false, startAngle: 0, currentAngle: 0, repsPerRotation: 10 };
 let currentSliderReps = 0;
 
 function updateSlider(angle) {
@@ -329,7 +329,8 @@ function updateSlider(angle) {
     handleCircle.setAttribute('cx', x);
     handleCircle.setAttribute('cy', y);
 
-    currentSliderReps = Math.min(dailyGoal, Math.floor(a / (360 / slider.repsPerRotation)));
+    const remainingReps = Math.max(0, dailyGoal - totalReps);
+    currentSliderReps = Math.min(remainingReps, Math.floor(a / (360 / slider.repsPerRotation)));
     modalRepCount.textContent = currentSliderReps;
 }
 
@@ -367,8 +368,9 @@ function handleDragMove(e) {
 
     const newTotalAngle = slider.currentAngle + angleDiff;
     const potentialReps = Math.floor(Math.max(0, newTotalAngle) / (360 / slider.repsPerRotation));
+    const remainingReps = Math.max(0, dailyGoal - totalReps);
 
-    if (potentialReps <= dailyGoal) {
+    if (potentialReps <= remainingReps) {
         slider.currentAngle = Math.max(0, newTotalAngle);
         updateSlider(slider.currentAngle);
     }
