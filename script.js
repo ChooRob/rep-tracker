@@ -180,23 +180,35 @@ resetBtn.addEventListener('click', () => {
 
 // 6. Calendar Logic
 calendarViewToggle.addEventListener('click', () => {
-    calendarView = calendarView === 'monthly' ? 'weekly' : 'monthly';
+    if (calendarView === 'monthly') {
+        calendarView = 'weekly';
+    } else if (calendarView === 'weekly') {
+        calendarView = 'daily';
+    } else {
+        calendarView = 'monthly';
+    }
     localStorage.setItem('calendarView', calendarView);
     renderCalendar();
 });
 
 function renderCalendar() {
     calendarGrid.innerHTML = '';
-    calendarViewToggle.textContent = calendarView === 'monthly' ? 'Weekly View' : 'Monthly View';
-    
+    calendarGrid.removeAttribute('data-view');
+
     if (calendarView === 'monthly') {
+        calendarViewToggle.textContent = 'Weekly View';
         renderMonthlyView();
-    } else {
+    } else if (calendarView === 'weekly') {
+        calendarViewToggle.textContent = 'Daily View';
         renderWeeklyView();
+    } else { // Daily view
+        calendarViewToggle.textContent = 'Monthly View';
+        renderDailyView();
     }
 }
 
 function renderMonthlyView() {
+    calendarGrid.setAttribute('data-view', 'monthly');
     const month = selectedDate.getMonth();
     const year = selectedDate.getFullYear();
     monthYearHeader.textContent = `${selectedDate.toLocaleString('default', { month: 'long' })} ${year}`;
@@ -226,6 +238,7 @@ function renderMonthlyView() {
 }
 
 function renderWeeklyView() {
+    calendarGrid.setAttribute('data-view', 'weekly');
     const startOfWeek = new Date(selectedDate);
     startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
     
@@ -248,6 +261,42 @@ function renderWeeklyView() {
         const dayCell = createDayCell(date);
         calendarGrid.appendChild(dayCell);
     }
+}
+
+function renderDailyView() {
+    const dateStr = getFormattedDate(selectedDate);
+    const dayData = repData[dateStr] || {};
+
+    monthYearHeader.textContent = selectedDate.toLocaleDateString('default', { weekday: 'long', month: 'long', day: 'numeric' });
+    calendarGrid.setAttribute('data-view', 'daily');
+    calendarGrid.innerHTML = ''; // Clear the grid
+
+    const exercisesDone = Object.keys(dayData);
+
+    if (exercisesDone.length === 0) {
+        calendarGrid.innerHTML = `<div class="no-data-day">No exercises recorded for this day.</div>`;
+        return;
+    }
+
+    exercisesDone.forEach(exercise => {
+        if (exerciseData[exercise]) {
+            const row = document.createElement('div');
+            row.className = 'day-view-row';
+
+            const exerciseInfo = document.createElement('div');
+            exerciseInfo.className = 'day-view-exercise';
+            exerciseInfo.innerHTML = `${exerciseData[exercise].icon} <span>${exercise}</span>`;
+            exerciseInfo.querySelector('svg').style.stroke = exerciseData[exercise].color;
+
+            const repsInfo = document.createElement('div');
+            repsInfo.className = 'day-view-reps';
+            repsInfo.innerHTML = `<span>${dayData[exercise].total}</span> reps`;
+
+            row.appendChild(exerciseInfo);
+            row.appendChild(repsInfo);
+            calendarGrid.appendChild(row);
+        }
+    });
 }
 
 function createDayCell(date) {
@@ -296,8 +345,10 @@ function createDayCell(date) {
 prevMonthBtn.addEventListener('click', () => {
     if (calendarView === 'monthly') {
         selectedDate.setMonth(selectedDate.getMonth() - 1);
-    } else {
+    } else if (calendarView === 'weekly') {
         selectedDate.setDate(selectedDate.getDate() - 7);
+    } else { // Daily
+        selectedDate.setDate(selectedDate.getDate() - 1);
     }
     renderCalendar();
 });
@@ -305,8 +356,10 @@ prevMonthBtn.addEventListener('click', () => {
 nextMonthBtn.addEventListener('click', () => {
     if (calendarView === 'monthly') {
         selectedDate.setMonth(selectedDate.getMonth() + 1);
-    } else {
+    } else if (calendarView === 'weekly') {
         selectedDate.setDate(selectedDate.getDate() + 7);
+    } else { // Daily
+        selectedDate.setDate(selectedDate.getDate() + 1);
     }
     renderCalendar();
 });

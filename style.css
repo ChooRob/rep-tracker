@@ -346,3 +346,94 @@ h1 {
 }
 
 #confirm-exercise-btn { background-color: #007AFF; }
+
+/* 11. Calendar View Enhancements */
+
+/* Bigger Weekly View */
+#calendar-grid[data-view="weekly"] .calendar-day {
+    padding: 8px;
+    min-height: 70px;
+    align-items: flex-start;
+}
+
+#calendar-grid[data-view="weekly"] .day-reps-container {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 4px;
+}
+
+#calendar-grid[data-view="weekly"] .day-reps {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 3px 5px;
+    border-radius: 6px;
+    background-color: rgba(128, 128, 128, 0.1);
+}
+
+#calendar-grid[data-view="weekly"] .day-reps svg {
+    width: 18px; /* Slightly bigger icon */
+    height: 18px;
+}
+
+#calendar-grid[data-view="weekly"] .day-reps span {
+    font-size: 0.95rem; /* Slightly bigger text */
+    font-weight: 500;
+}
+
+.calendar-day.selected #calendar-grid[data-view="weekly"] .day-reps {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+
+/* Daily View */
+#calendar-grid[data-view="daily"] {
+    display: block;
+    gap: 0;
+    border-top: 1px solid var(--border-color);
+}
+
+.day-view-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 8px;
+    border-bottom: 1px solid var(--border-color);
+}
+.day-view-row:last-child {
+    border-bottom: none;
+}
+
+.day-view-exercise {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 500;
+    font-size: 1.05rem;
+}
+
+.day-view-exercise svg {
+    width: 28px;
+    height: 28px;
+    fill: none;
+    stroke-width: 2.2;
+}
+
+.day-view-reps {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--text-sub);
+}
+.day-view-reps span {
+    color: var(--text-main);
+    font-weight: 700;
+}
+
+.no-data-day {
+    text-align: center;
+    padding: 30px 20px;
+    color: var(--text-sub);
+    font-size: 1rem;
+}
