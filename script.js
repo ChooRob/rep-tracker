@@ -100,6 +100,7 @@ function updateUI() {
     exerciseTitleBtn.querySelector('h1').textContent = currentExercise;
     exerciseTitleBtn.querySelector('.icon-container').innerHTML = currentData.icon;
     exerciseTitleBtn.querySelector('.icon-container svg').style.stroke = accentColor;
+    repCountDisplay.textContent = totalReps;
     repCountDisplay.style.color = accentColor;
     
     // --- Update Goal Bar ---
