@@ -1,4 +1,4 @@
-/* 1. Theme Variables (The Master Colors) */
+/* 1. Theme Variables */
 :root {
     --bg-color: #f0f2f5;
     --card-bg: #ffffff;
@@ -6,6 +6,8 @@
     --text-sub: #666666;
     --border-color: #efefef;
     --input-bg: #ffffff;
+    --selected-bg: #e5e5e7;
+    --selected-text: #1c1c1e;
 }
 
 [data-theme="dark"] {
@@ -15,13 +17,16 @@
     --text-sub: #8e8e93;
     --border-color: #38383a;
     --input-bg: #2c2c2e;
+    --selected-bg: #3a3a3c;
+    --selected-text: #ffffff;
 }
 
 /* 2. Base & Body */
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     display: flex;
-    justify-content: center;
+    flex-direction: column; 
+    align-items: center; 
     background-color: var(--bg-color);
     margin: 0;
     padding: 20px;
@@ -39,6 +44,7 @@ body {
     max-width: 400px;
     text-align: center;
     transition: background-color 0.3s ease, color 0.3s ease;
+    margin-bottom: 20px;
 }
 
 /* 3. Header & Controls */
@@ -60,7 +66,36 @@ body {
 h1 {
     color: var(--text-main);
     font-size: 1.6rem;
-    margin-top: 0;
+    margin: 0;
+}
+
+.exercise-title-btn {
+    background: none;
+    border: none;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    cursor: pointer;
+    padding: 0;
+    margin-bottom: 10px;
+}
+.exercise-title-btn .icon-container {
+    width: 35px;
+    height: 35px;
+}
+.exercise-title-btn .icon-container svg {
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+.exercise-title-btn span {
+    font-size: 1rem;
+    transition: transform 0.2s ease;
 }
 
 /* 4. Display & Progress Bar */
@@ -72,10 +107,10 @@ h1 {
 .counter-display #rep-count {
     font-size: 5.5rem;
     font-weight: 800;
-    color: #007AFF; /* Apple Blue */
     display: block;
     line-height: 1;
     margin: 10px 0;
+    transition: color 0.3s ease;
 }
 
 .goal-container { margin: 20px 0; }
@@ -92,8 +127,7 @@ h1 {
 #progress-bar {
     width: 0%;
     height: 100%;
-    background: linear-gradient(90deg, #4cd964, #28cd41);
-    transition: width 0.5s ease-in-out, background 0.3s ease;
+    transition: width 0.5s ease-in-out, background-color 0.3s ease;
 }
 
 .goal-row {
@@ -113,34 +147,9 @@ h1 {
 }
 
 /* 5. Inputs & Buttons (iOS Styled) */
-.input-group {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin: 25px 0;
-}
+.input-group { margin: 25px 0; }
 
-input {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 100%;
-    box-sizing: border-box;
-    padding: 16px;
-    font-size: 1.2rem;
-    background-color: var(--input-bg);
-    color: var(--text-main);
-    border: 1px solid var(--border-color);
-    border-radius: 14px;
-    text-align: center;
-    transition: border-color 0.2s ease, background-color 0.3s ease;
-}
-
-input:focus {
-    outline: none;
-    border-color: #007AFF;
-}
-
-#add-btn {
+#show-rep-modal-btn {
     -webkit-appearance: none;
     appearance: none;
     width: 100%;
@@ -155,11 +164,7 @@ input:focus {
     transition: transform 0.1s ease, background-color 0.2s ease;
     box-shadow: 0 4px 6px rgba(0, 122, 255, 0.15);
 }
-
-#add-btn:active {
-    transform: scale(0.96);
-    background-color: #005ecb;
-}
+#show-rep-modal-btn:active { transform: scale(0.96); }
 
 /* 6. History Section */
 .history-section {
@@ -168,21 +173,8 @@ input:focus {
     border-top: 1px solid var(--border-color);
     padding-top: 15px;
 }
-
-.history-section h3 {
-    font-size: 1rem;
-    color: var(--text-main);
-    margin: 0 0 10px 0;
-}
-
-#history-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    max-height: 150px;
-    overflow-y: auto;
-}
-
+.history-section h3 { font-size: 1rem; color: var(--text-main); margin: 0 0 10px 0; }
+#history-list { list-style: none; padding: 0; margin: 0; max-height: 150px; overflow-y: auto; }
 .history-item {
     display: flex;
     justify-content: space-between;
@@ -191,10 +183,7 @@ input:focus {
     color: var(--text-main);
     font-size: 0.95rem;
 }
-
-.history-time {
-    color: var(--text-sub);
-}
+.history-time { color: var(--text-sub); }
 
 /* 7. Reset Button */
 #reset-btn {
@@ -209,3 +198,151 @@ input:focus {
     cursor: pointer;
     width: 100%;
 }
+
+/* 8. Calendar View */
+#calendar-container { padding: 1.5rem; }
+.calendar-top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+.calendar-top-header h2 { margin: 0; font-size: 1.3rem; }
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+.calendar-header h3 { margin: 0; font-size: 1.2rem; }
+.calendar-header button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-main);
+}
+.calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+.day-name {
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--text-sub);
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+.calendar-day {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 4px;
+    min-height: 50px;
+    border-radius: 10px;
+    background-color: var(--input-bg);
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+.calendar-day.today { border-color: #007AFF; }
+.calendar-day.selected { background-color: var(--selected-bg); color: var(--selected-text); }
+.calendar-day.selected .day-number { color: var(--selected-text); }
+
+.day-number { font-size: 0.8rem; font-weight: 500; align-self: flex-start; margin: -2px 0 0 2px;}
+.day-reps-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 3px;
+    margin-top: 4px;
+}
+
+.day-reps {
+    font-weight: 700;
+    font-size: 0.75rem;
+    border-radius: 4px;
+}
+/* Monthly View Rep Bubbles */
+#calendar-grid[data-view="monthly"] .day-reps {
+    color: white;
+    padding: 1px 4px;
+    min-width: 10px;
+    text-align: center;
+}
+/* Weekly View Reps with Icons */
+#calendar-grid[data-view="weekly"] .day-reps {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+#calendar-grid[data-view="weekly"] .day-reps svg {
+    width: 14px;
+    height: 14px;
+    stroke-width: 2.5;
+    fill: none;
+}
+#calendar-grid[data-view="weekly"] .day-reps span {
+    font-size: 0.9rem;
+    color: var(--text-main);
+}
+.calendar-day.selected #calendar-grid[data-view="weekly"] .day-reps span {
+    color: var(--selected-text);
+}
+
+/* 9. Modals (General & Rep Input) */
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+.modal-content { background: var(--card-bg); padding: 2rem; border-radius: 30px; width: 90%; max-width: 350px; display: flex; flex-direction: column; align-items: center; gap: 1.5rem; }
+.circular-slider { position: relative; width: 200px; height: 200px; user-select: none; touch-action: none; }
+.circular-slider svg { width: 100%; height: 100%; }
+.slider-bg { fill: none; stroke: var(--border-color); stroke-width: 12; }
+.slider-progress { fill: none; stroke: #007AFF; stroke-width: 12; stroke-linecap: round; }
+.slider-handle { fill: white; stroke: #007AFF; stroke-width: 4; cursor: pointer; }
+.rep-display { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
+.rep-display #modal-rep-count { font-size: 3rem; font-weight: 700; color: var(--text-main); }
+.rep-display p { margin: 0; color: var(--text-sub); }
+.confirm-btn, #confirm-reps-btn { width: 100%; padding: 16px; font-size: 1.1rem; font-weight: 600; border-radius: 14px; color: white; border: none; cursor: pointer; }
+#confirm-reps-btn { background-color: #4cd964; }
+.text-btn { background: none; border: none; color: #007AFF; font-size: 1rem; cursor: pointer; }
+
+/* 10. Exercise Picker Modal */
+#exercise-modal .modal-content { gap: 1rem; }
+.picker-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    /* Removed max-height to show all items */
+}
+
+.picker-item {
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: var(--input-bg);
+    border: 2px solid var(--border-color);
+    color: var(--text-main);
+    padding: 12px 15px;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color 0.2s, background-color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.picker-item svg {
+    width: 24px;
+    height: 24px;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: stroke 0.2s;
+}
+.picker-item.selected {
+    background-color: var(--input-bg);
+    font-weight: 600;
+}
+
+#confirm-exercise-btn { background-color: #007AFF; }
