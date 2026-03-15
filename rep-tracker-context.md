@@ -29,4 +29,20 @@ style.css: Uses :root for light mode and [data-theme="dark"] for dark mode. Incl
 script.js: Handles DOM manipulation, localStorage syncing, theme initialization, progress math, sound playback, and the Web Share API.
 
 Where We Left Off:
-The core app is 100% fully functional and cross-browser compatible (fixes applied for Safari caching and variable inheritance). The next planned step was generating an icon.png (180x180) to use as the Apple Touch Icon for the home screen.
+The core app is 100% fully functional and cross-browser compatible (fixes applied for Safari caching and variable inheritance). 
+
+- A circular slider for inputting repetitions.
+- A "Show Rep Modal" button that opens a modal containing the circular slider.
+- The ability to confirm or cancel the reps added in the modal.
+- A display for the current rep count.
+- A reset button to clear the rep count.
+- A history list that shows the reps added and the time they were added.
+- A progress bar that shows the progress towards a daily goal.
+- A display for the current daily goal.
+- A "Set Goal" button that allows the user to set a new daily goal.
+- A theme toggle to switch between light and dark modes.
+- A share button to share the user's progress.
+- A success sound that plays when reps are confirmed.
+- A calendar view with monthly, weekly, and daily views to track progress.
+- The ability to switch between different exercises (Push-ups, Squats, Sit-ups, Pull-ups).
+- The application uses local storage to persist data.
