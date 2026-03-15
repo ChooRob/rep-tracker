@@ -47,6 +47,126 @@ body {
     margin-bottom: 20px;
 }
 
+.eyebrow {
+    margin: 0 0 6px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-sub);
+}
+
+.account-card {
+    text-align: left;
+}
+
+.account-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.account-card-header h2,
+.group-progress-header h2,
+.group-summary h3 {
+    margin: 0;
+}
+
+.account-card-header-stacked {
+    align-items: center;
+}
+
+.account-meta {
+    margin: 6px 0 0;
+    color: var(--text-sub);
+    font-size: 0.92rem;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    color: var(--text-main);
+    font-size: 0.92rem;
+    font-weight: 600;
+}
+
+.field-group input {
+    -webkit-appearance: none;
+    appearance: none;
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    background-color: var(--input-bg);
+    color: var(--text-main);
+    font-size: 1rem;
+    padding: 14px 16px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.field-group input:focus {
+    border-color: #007AFF;
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.12);
+}
+
+.inline-feedback {
+    min-height: 1.2rem;
+    margin: 0;
+    color: #ff3b30;
+    font-size: 0.9rem;
+}
+
+.primary-btn,
+.secondary-btn {
+    -webkit-appearance: none;
+    appearance: none;
+    border: none;
+    border-radius: 14px;
+    padding: 14px 16px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.primary-btn {
+    background-color: #007AFF;
+    color: white;
+}
+
+.secondary-btn {
+    background-color: var(--input-bg);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+}
+
+.group-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.group-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+.tracker-status-note {
+    min-height: 1.2rem;
+    margin: 0 0 10px;
+    color: var(--text-sub);
+    font-size: 0.9rem;
+}
+
 /* 3. Header & Controls */
 .top-controls {
     display: flex;
@@ -61,6 +181,11 @@ body {
     cursor: pointer;
     color: var(--text-main);
     padding: 5px;
+}
+
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
 }
 
 h1 {
@@ -188,6 +313,7 @@ h1 {
 /* 7. Reset Button */
 #reset-btn {
     -webkit-appearance: none;
+    appearance: none;
     background: none;
     border: none;
     color: #ff3b30;
@@ -304,6 +430,14 @@ h1 {
 .confirm-btn, #confirm-reps-btn { width: 100%; padding: 16px; font-size: 1.1rem; font-weight: 600; border-radius: 14px; color: white; border: none; cursor: pointer; }
 #confirm-reps-btn { background-color: #4cd964; }
 .text-btn { background: none; border: none; color: #007AFF; font-size: 1rem; cursor: pointer; }
+.group-modal-content {
+    align-items: stretch;
+    text-align: left;
+}
+
+.modal-field {
+    width: 100%;
+}
 
 /* 10. Exercise Picker Modal */
 #exercise-modal .modal-content { gap: 1rem; }
@@ -347,7 +481,108 @@ h1 {
 
 #confirm-exercise-btn { background-color: #007AFF; }
 
-/* 11. Calendar View Enhancements */
+#confirm-create-group-btn,
+#confirm-join-group-btn,
+#confirm-switch-group-btn {
+    background-color: #007AFF;
+}
+
+/* 11. Group Progress */
+#group-progress-container {
+    text-align: left;
+}
+
+.group-progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.group-progress-empty {
+    margin: 0;
+    color: var(--text-sub);
+}
+
+.group-progress-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.member-progress-card {
+    background-color: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 18px;
+    padding: 14px;
+}
+
+.member-progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.member-progress-name {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.member-progress-total {
+    color: var(--text-sub);
+    font-size: 0.88rem;
+    white-space: nowrap;
+}
+
+.member-exercise-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.member-exercise-row {
+    display: grid;
+    grid-template-columns: 88px 1fr auto;
+    gap: 10px;
+    align-items: center;
+}
+
+.member-exercise-name {
+    font-size: 0.88rem;
+    color: var(--text-sub);
+}
+
+.member-exercise-track {
+    width: 100%;
+    height: 10px;
+    background-color: var(--border-color);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.member-exercise-fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.3s ease;
+}
+
+.member-exercise-value {
+    font-size: 0.86rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.member-empty-note {
+    margin: 0;
+    color: var(--text-sub);
+    font-size: 0.9rem;
+}
+
+/* 12. Calendar View Enhancements */
 
 /* Bigger Weekly View */
 #calendar-grid[data-view="weekly"] .calendar-day {
@@ -436,4 +671,31 @@ h1 {
     padding: 30px 20px;
     color: var(--text-sub);
     font-size: 1rem;
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 14px;
+    }
+
+    .container {
+        padding: 1.2rem;
+        border-radius: 24px;
+    }
+
+    .account-card-header,
+    .group-progress-header,
+    .member-progress-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .group-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .member-exercise-row {
+        grid-template-columns: 1fr;
+    }
 }

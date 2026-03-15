@@ -1,0 +1,12 @@
+{$CADDY_SITE_ADDRESS:localhost} {
+    root * /srv
+    encode gzip zstd
+
+    @pocketbaseApi path /api/*
+    reverse_proxy @pocketbaseApi backend:8090
+
+    @pocketbaseSystem path /_/*
+    reverse_proxy @pocketbaseSystem backend:8090
+
+    file_server
+}
