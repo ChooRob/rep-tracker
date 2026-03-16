@@ -26,8 +26,10 @@ Rep Tracker is a small self-hosted family fitness tracker built with vanilla HTM
 docker compose up -d
 ```
 
-3. Open the app at `http://localhost` unless you changed `CADDY_SITE_ADDRESS`.
-4. Open PocketBase admin through the same origin at `http://localhost/_/`.
+3. By default, Caddy listens on all interfaces inside the container.
+4. With the default Compose mapping, open the app at `http://localhost:8020` on the Docker host or `http://<server-ip>:8020` from another machine on the same network.
+5. Open PocketBase admin through the same origin at `http://localhost:8020/_/` or `http://<server-ip>:8020/_/`.
+6. You usually do not need to change `CADDY_SITE_ADDRESS` for LAN access. Leave it as `:80` unless you want hostname-based routing.
 
 ## Docker Services
 
@@ -139,8 +141,9 @@ You can start testing immediately after the Compose stack is up.
 Verify:
 
 1. `http://localhost` serves the frontend.
-2. `http://localhost/_/` opens PocketBase admin.
-3. Browser requests to `/api/*` and `/_/*` go through Caddy.
+2. `http://localhost:8020` serves the frontend when using the default Compose mapping.
+3. `http://localhost:8020/_/` opens PocketBase admin.
+4. Browser requests to `/api/*` and `/_/*` go through Caddy.
 
 ### Phase 1: Auth And Group Integration Test
 
@@ -185,6 +188,24 @@ Testing can begin in two stages:
 2. As soon as PocketBase collections and rules are created for real feature testing.
 
 If the goal is to test sign-up, sign-in, and groups, Phase 1 is the point where testing becomes useful.
+
+## LAN Access Notes
+
+You do not need to change Docker network mode just to reach the app from another machine.
+
+The current setup already publishes the frontend container ports to the host:
+
+- `8020 -> 80`
+- `8021 -> 443`
+
+If the site does not load from another machine, check these first:
+
+1. Use `http://<server-ip>:8020`.
+2. Make sure the containers are running with `docker compose ps`.
+3. Make sure the host firewall allows inbound traffic on port `8020`.
+4. Make sure you are not overriding `CADDY_SITE_ADDRESS` with an incorrect host value.
+
+Only consider host networking if you have a specific reason to avoid published ports. It is not required for this setup.
 
 ## Next Steps
 

@@ -300,3 +300,11 @@ Current status:
 4. Personal progress syncs to PocketBase without breaking local interactions.
 5. Group progress renders one member row or card per member for the selected date.
 6. The current auth and group requests succeed against a live PocketBase instance with the expected schema.
+
+## Resume Prompt
+
+Use this to resume work in a new session:
+
+```text
+Continue work on rep-tracker. Read .github/copilot-instructions.md, rep-tracker-planning.md, README.md, and script.js, then continue from the next step. The current priority is PocketBase collections/rules verification, then synced personal progress, then shared group progress rendering.
+```
